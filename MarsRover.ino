@@ -10,13 +10,15 @@ StaticJsonDocument<512> jsonInfoHttp;
 #include <LittleFS.h>
 #include <esp_now.h>
 
-#include <battery_ctrl.h>
-#include <config.h>
-#include <motor_ctrl.h>
-#include <wifi_ctrl.h>
-#include <http_server.h>
-#include <esp_now_ctrl.h>
-
+#include "battery_ctrl.h"
+#include "config.h"
+#include "motor_ctrl.h"
+#include "wifi_ctrl.h"
+#include "json_cmd.h"
+#include "json_handle.h"
+#include "uart_ctrl.h"
+#include "http_server.h"
+#include "esp_now_ctrl.h"
 
 void setup() {
   Serial.begin(115200);
@@ -41,15 +43,13 @@ void setup() {
   Serial.println("ESP Now Initialized");
 
 }
-float speed = 0;
 void loop() {
-    float new_speed = Serial.parseFloat(SKIP_ALL, '\n');
-    if (new_speed) {
-      speed = new_speed;
+    serialCtrl();
+    server.handleClient();
+    if(runNewJsonCmd) {
+      jsonCmdReceiveHandler();
+      jsonCmdReceive.clear();
+     runNewJsonCmd = false;
     }
-    Serial.print("Speed configured: ");
-    Serial.println(speed);
-    channel_A_Ctrl(speed);
-    channel_B_Ctrl(speed);
-    delay(1000);
+
 }

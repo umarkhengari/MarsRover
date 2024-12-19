@@ -49,7 +49,7 @@ void changeEspNowMode(byte inputMode) {
   switch(inputMode) {
   case 0: espNowMode = inputMode;
     if (InfoPrint == 1) {Serial.println("esp-now mode: none");}
-    screenLine_3 = "ESP-NOW: NONE";
+
     
 
     jsonInfoHttp.clear();
@@ -59,7 +59,7 @@ void changeEspNowMode(byte inputMode) {
   case 1: espNowMode = inputMode;
     espNowMessage.cmd = 0;
     if (InfoPrint == 1) {Serial.println("esp-now mode: flow-leader(group)");}
-    screenLine_3 = "ESP-NOW: F-LEADER-B";
+
     
 
     jsonInfoHttp.clear();
@@ -69,7 +69,7 @@ void changeEspNowMode(byte inputMode) {
   case 2: espNowMode = inputMode;
     espNowMessage.cmd = 0;
     if (InfoPrint == 1) {Serial.println("esp-now mode: flow-leader(single)");}
-    screenLine_3 = "ESP-NOW: F-LEADER-S";
+
     
 
     jsonInfoHttp.clear();
@@ -78,7 +78,7 @@ void changeEspNowMode(byte inputMode) {
     break;
   case 3: espNowMode = inputMode;
     if (InfoPrint == 1) {Serial.println("esp-now mode: follower");}
-    screenLine_3 = "ESP-NOW: > FOLLOWER <";
+
     
 
     jsonInfoHttp.clear();
@@ -152,12 +152,12 @@ void OnDataRecv(const esp_now_recv_info* recv_info, const unsigned char* incomin
 
   switch(espNowMegsRecv.cmd) {
     case 0: {
-      RoArmM2_allJointAbsCtrl(espNowMegsRecv.base,
-                              espNowMegsRecv.shoulder,
-                              espNowMegsRecv.elbow,
-                              espNowMegsRecv.hand,
-                              0,
-                              0);break;
+//      RoArmM2_allJointAbsCtrl(espNowMegsRecv.base,
+//                              espNowMegsRecv.shoulder,
+//                              espNowMegsRecv.elbow,
+//                              espNowMegsRecv.hand,
+//                              0,
+//                              0);break;
     }
     case 1: {
       DeserializationError err = deserializeJson(jsonCmdReceive, espNowMegsRecv.message);
@@ -357,56 +357,54 @@ void espNowSingleDevSend(String inputMac, byte devCodeIn, float bIn, float sIn, 
   Serial.println(getInfoJsonString);
 }
 
-
-void espNowSingleDevFlowCtrl() {
-  espNowMessage.base     = radB;
-  espNowMessage.shoulder = radS;
-  espNowMessage.elbow    = radE;
-  espNowMessage.hand     = radG;
-
-  esp_err_t result = esp_now_send(singleFollowerDev, 
-                                  (uint8_t *) &espNowMessage,
-                                  sizeof(struct_message));
-
-  // if (result == ESP_OK) {
-  //   Serial.println("Sent with success");
-  // }
-  // else {
-  //   Serial.println("Error sending the data");
-  // }
-  jsonInfoHttp.clear();
-  jsonInfoHttp["T"] = CMD_ESP_NOW_SEND;
-  jsonInfoHttp["status"] = (result == ESP_OK ? 8 : 7);
-  jsonInfoHttp["megs"] = (result == ESP_OK ? "sent with success." : "error sending the data.");
-
-  String getInfoJsonString;
-  serializeJson(jsonInfoHttp, getInfoJsonString);
-  Serial.println(getInfoJsonString);
-}
-
-
-void espNowGroupDevsFlowCtrl() {
-  espNowMessage.base     = radB;
-  espNowMessage.shoulder = radS;
-  espNowMessage.elbow    = radE;
-  espNowMessage.hand     = radG;
-
-  esp_err_t result = esp_now_send(0, (uint8_t *) &espNowMessage, sizeof(struct_message));
-  // if (result == ESP_OK) {
-  //   Serial.println("Sent with success");
-  // }
-  // else {
-  //   Serial.println("Error sending the data");
-  // }
-  jsonInfoHttp.clear();
-  jsonInfoHttp["T"] = CMD_ESP_NOW_SEND;
-  jsonInfoHttp["status"] = (result == ESP_OK ? 8 : 7);
-  jsonInfoHttp["megs"] = (result == ESP_OK ? "sent with success." : "error sending the data.");
-
-  String getInfoJsonString;
-  serializeJson(jsonInfoHttp, getInfoJsonString);
-  Serial.println(getInfoJsonString);
-}
+//void espNowSingleDevFlowCtrl() {
+//  espNowMessage.base     = radB;
+//  espNowMessage.shoulder = radS;
+//  espNowMessage.elbow    = radE;
+//  espNowMessage.hand     = radG;
+//
+//  esp_err_t result = esp_now_send(singleFollowerDev, 
+//                                  (uint8_t *) &espNowMessage,
+//                                  sizeof(struct_message));
+//
+//  // if (result == ESP_OK) {
+//  //   Serial.println("Sent with success");
+//  // }
+//  // else {
+//  //   Serial.println("Error sending the data");
+//  // }
+//  jsonInfoHttp.clear();
+//  jsonInfoHttp["T"] = CMD_ESP_NOW_SEND;
+//  jsonInfoHttp["status"] = (result == ESP_OK ? 8 : 7);
+//  jsonInfoHttp["megs"] = (result == ESP_OK ? "sent with success." : "error sending the data.");
+//
+//  String getInfoJsonString;
+//  serializeJson(jsonInfoHttp, getInfoJsonString);
+//  Serial.println(getInfoJsonString);
+//}
+//
+//void espNowGroupDevsFlowCtrl() {
+//  espNowMessage.base     = radB;
+//  espNowMessage.shoulder = radS;
+//  espNowMessage.elbow    = radE;
+//  espNowMessage.hand     = radG;
+//
+//  esp_err_t result = esp_now_send(0, (uint8_t *) &espNowMessage, sizeof(struct_message));
+//  // if (result == ESP_OK) {
+//  //   Serial.println("Sent with success");
+//  // }
+//  // else {
+//  //   Serial.println("Error sending the data");
+//  // }
+//  jsonInfoHttp.clear();
+//  jsonInfoHttp["T"] = CMD_ESP_NOW_SEND;
+//  jsonInfoHttp["status"] = (result == ESP_OK ? 8 : 7);
+//  jsonInfoHttp["megs"] = (result == ESP_OK ? "sent with success." : "error sending the data.");
+//
+//  String getInfoJsonString;
+//  serializeJson(jsonInfoHttp, getInfoJsonString);
+//  Serial.println(getInfoJsonString);
+//}
 
 
 void changeBroadcastMode(bool inputMode, String inputMac) {
